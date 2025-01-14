@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: bitbucket-demo
-  title: Test Bitbucket RepoUrlPicker template 2
-  description: scaffolder v1beta3 template demo publishing to bitbucket
+  name: ServiceNow
+  title: ServiceNow Template
+  description: Servicenow template used for raising requests
 spec:
   owner: backstage/techdocs-core
   type: service
@@ -19,7 +19,7 @@ spec:
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
-              - bitbucket.org
+              - abb.service-now.com
             # The rest of these options are optional.
             # You can read more at: https://backstage.io/docs/reference/plugin-scaffolder.repourlpickerfieldextension
             # allowedOwners:
