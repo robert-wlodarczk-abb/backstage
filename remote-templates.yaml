@@ -8,6 +8,7 @@ spec:
   targets:
     - https://github.com/robert-wlodarczk-abb/backstage/blob/main/template1.yaml
     - https://github.com/robert-wlodarczk-abb/backstage/blob/main/template2.yaml
+    - https://github.com/robert-wlodarczk-abb/backstage/blob/main/template3.yaml
 
 
 # apiVersion: backstage.io/v1alpha1
