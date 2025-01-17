@@ -63,13 +63,13 @@ spec:
           location: ${{ parameters.location }}
           sku: ${{ parameters.sku }}
     # Publish the code to a GitHub repo
-    - id: publish
-      name: Publish
-      action: publish:github
-      input:
-        allowedHosts: ['github.com']
-        description: Deployment of Azure Storage Account for ${{ parameters.name }}
-        repoUrl: ${{ parameters.repoUrl }}
+    # - id: publish
+    #   name: Publish
+    #   action: publish:github
+    #   input:
+    #     allowedHosts: ['github.com']
+    #     description: Deployment of Azure Storage Account for ${{ parameters.name }}
+    #     repoUrl: ${{ parameters.repoUrl }}
     # Trigger a GitHub Action to deploy the storage account
     - id: github-action
       name: Trigger GitHub Action
