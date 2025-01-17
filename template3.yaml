@@ -1,35 +1,100 @@
+# Define the API version and kind of resource
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
+# Template metadata. Here's your intro to what this template does.
 metadata:
-  name: test-v1beta3
-  title: Test v1beta3
-  description: Test V1 Beta 3 Demo Templates
+  name: azure-storage-account
+  title: Azure Storage Account Deployment
+  description: Deploy an Azure Storage Account using Terraform
+# The specification for how the template behaves
 spec:
-  type: website
-  owner: team-a
+  # Who owns this template. Generally, it could be a team or individual
+  owner: user:guest
+  # The type of service this template deploys
+  type: service
+  # User-input parameters. Makes your templates dynamic!
   parameters:
-    - name: Enter some stuff
-      description: Enter some stuff
+    # Ask the user to input some basic details
+    - title: Storage Account Details
+      required:
+        - name
+        - resourceGroupName
+        - location
+        - sku
       properties:
-        inputString:
+        name:
+          title: Storage Account Name
           type: string
-          title: string input test
-        inputObject:
-          type: object
-          title: object input test
-          description: a little nested thing never hurt anyone right?
-          properties:
-            first:
-              type: string
-              title: first
-            second:
-              type: number
-              title: second
+          description: Unique name for your Azure Storage Account
+          ui:autofocus: true
+        resourceGroupName:
+          title: Resource Group Name
+          type: string
+          description: Name of the Azure Resource Group
+        location:
+          title: Azure Location
+          type: string
+          description: Azure region to deploy the Storage Account
+          enum:
+            - eastus
+            - westus
+            - westeurope
+            - southeastasia
+        sku:
+          title: SKU Type
+          type: string
+          description: SKU for the storage account (e.g., Standard_LRS, Standard_GRS)
+          enum:
+            - Standard_LRS
+            - Standard_GRS
+            - Standard_ZRS
+            - Premium_LRS
+  # Steps that the template will execute in order
   steps:
-    - id: debug
-      if: ${{ true === true }}
-      name: Debug
-      action: debug:log
+    # Fetch the base template
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
       input:
-        message: ${{ parameters.inputString }}
-        extra: ${{ parameters.inputObject }}
+        url: ./content  # Where the base Terraform files are stored
+        values:
+          name: ${{ parameters.name }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}
+          location: ${{ parameters.location }}
+          sku: ${{ parameters.sku }}
+    # Publish the code to a GitHub repo
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: Deployment of Azure Storage Account for ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
+    # Trigger a GitHub Action to deploy the storage account
+    - id: github-action
+      name: Trigger GitHub Action
+      action: github:actions:dispatch
+      input:
+        workflowId: deploy-azure-storage.yml  # GitHub Action workflow ID
+        repoUrl: ${{ parameters.repoUrl }}
+        branchOrTagName: 'main'  # The branch to run this action on
+        workflowInputs:
+          storageAccountName: ${{ parameters.name }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}
+          location: ${{ parameters.location }}
+          sku: ${{ parameters.sku }}
+    # Register the new component in the Backstage catalog
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'  # Where the catalog info is stored
+  # Output links to the user after the template execution
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
