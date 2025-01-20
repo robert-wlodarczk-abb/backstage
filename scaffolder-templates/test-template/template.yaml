@@ -9,7 +9,7 @@ metadata:
 # The specification for how the template behaves
 spec:
   # Who owns this template. Generally, it could be a team or individual
-  owner: BackstageUsers
+  owner: BackstageAdmins
   # The type of service this template deploys
   type: service
   # User-input parameters. Makes your templates dynamic!
