@@ -54,7 +54,7 @@ spec:
       action: github:actions:dispatch
       input:
         workflowId: stages.template.yaml  # Path to your GitHub Action workflow file
-        repoUrl: https://github.com/robert-wlodarczk-abb/backstage/blob/main/  # Replace with your repository URL
+        repoUrl: https://github.com/robert-wlodarczk-abb/backstage  # Replace with your repository URL
         branchOrTagName: 'main'  # Branch containing the workflow file
         workflowInputs:
           storageAccountName: ${{ parameters.name }}
