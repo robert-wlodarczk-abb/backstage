@@ -18,6 +18,7 @@ spec:
     - title: Storage Account Details
       required:
         - name
+        - subscription
         - resourceGroupName
         - location
         - sku
@@ -27,6 +28,10 @@ spec:
           type: string
           description: Unique name for your Azure Storage Account
           ui:autofocus: true
+        subscription:
+          title: Subscription ID
+          type: string
+          description: ID of the Subscription
         resourceGroupName:
           title: Resource Group Name
           type: string
@@ -59,6 +64,7 @@ spec:
         url: ./content  # Where the base Terraform files are stored
         values:
           name: ${{ parameters.name }}
+          subscription: ${{ parameters.subscription }}
           resourceGroupName: ${{ parameters.resourceGroupName }}
           location: ${{ parameters.location }}
           sku: ${{ parameters.sku }}
@@ -80,6 +86,7 @@ spec:
         branchOrTagName: 'main'  # The branch to run this action on
         workflowInputs:
           storageAccountName: ${{ parameters.name }}
+          subscription: ${{ parameters.subscription }}
           resourceGroupName: ${{ parameters.resourceGroupName }}
           location: ${{ parameters.location }}
           sku: ${{ parameters.sku }}
